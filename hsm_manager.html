@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HSM Secure Provisioning Dashboard</title>
+    <style>
+        :root {
+            --bg-main: #09090b;
+            --bg-card: #18181b;
+            --text-main: #f4f4f5;
+            --text-muted: #a1a1aa;
+            --border-color: #27272a;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #06b6d4;
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: "Fira Code", "Courier New", monospace;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .header-span {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 16px;
+            margin-bottom: 8px;
+        }
+
+        .header-span h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        .badge {
+            background: #27272a;
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            border: 1px solid var(--border-color);
+        }
+
+        .badge.active {
+            color: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .card h3 {
+            margin: 0 0 12px 0;
+            font-size: 1.1rem;
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 12px;
+        }
+
+        label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        input {
+            background: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--accent-green);
+            font-family: var(--font-mono);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #27272a;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button.primary {
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--accent-blue);
+            border-color: rgba(6, 182, 212, 0.3);
+        }
+
+        button.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+
+        button.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        .terminal {
+            background: #000;
+            border-radius: 0 0 12px 12px;
+            padding: 16px;
+            font-family: var(--font-mono);
+            color: var(--accent-green);
+            height: 220px;
+            overflow-y: auto;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #18181b;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .dot.r {
+            background: #ff5f56;
+        }
+
+        .dot.y {
+            background: #ffbd2e;
+        }
+
+        .dot.g {
+            background: #27c93f;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+    </style>
+</head>
+
+<body onload="checkExistingPorts()">
+
+    <div class="dashboard">
+        <div class="header-span">
+            <h2>🛡️ Enterprise HSM Console v4.0</h2>
+            <div id="statusBadge" class="badge">DISCONNECTED</div>
+        </div>
+        <!-- QUICK DISPLAY TRIGGER CARD -->
+        <div class="card full-width">
+            <h3 style="border-left-color: var(--accent-green);">⚡ Quick-Push to OLED</h3>
+            <div class="btn-group">
+                <button onclick="sendCommand('SHOW_SLOT:Bank\n')" class="primary">🏦 Show Bank 2FA</button>
+                <button onclick="sendCommand('SHOW_SLOT:AWS\n')" class="primary">☁️ Show AWS 2FA</button>
+            </div>
+        </div>
+        <div class="card full-width"
+            style="flex-direction: row; justify-content: space-between; align-items: center; padding: 20px 24px;">
+            <div>
+                <h3 style="border-left-color: var(--accent-green); margin-bottom: 4px;">Hardware Link</h3>
+                <span style="font-size: 0.85rem; color: var(--text-muted);">Establish encrypted serial bridge to
+                    air-gapped device.</span>
+            </div>
+            <div style="width: 200px;">
+                <button onclick="connectPort()" id="connectBtn" class="success">🔌 Connect Device</button>
+                <button onclick="disconnectPort()" id="disconnectBtn" class="danger"
+                    style="display:none;">Disconnect</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>Inject New Slot</h3>
+            <label>Account Identifier</label><input type="text" id="slotName" placeholder="e.g. AWS:RootCloud">
+            <label style="margin-top: 8px;">Base32 Secret Key</label><input type="text" id="slotSecret"
+                placeholder="JBSWY3DPEHPK3PXP">
+            <button onclick="addSlot()" class="primary" style="margin-top: 12px;">Deploy Token</button>
+        </div>
+
+        <div class="card">
+            <h3 style="border-left-color: var(--accent-red);">Security Operations</h3>
+            <label>Purge Slot (Index 1-8)</label>
+            <div style="display: flex; gap: 12px;">
+                <input type="number" id="removeSlotNum" value="1" min="1" max="8" style="flex: 1; text-align: center;">
+                <button onclick="removeSlot()" class="danger" style="flex: 2;">Purge Slot</button>
+            </div>
+            <label style="margin-top: 16px;">Update Master PIN</label>
+            <div style="display: flex; gap: 12px; margin-bottom: 8px;">
+                <input type="password" id="oldPin" placeholder="Current PIN" style="flex: 1;">
+                <input type="password" id="newPin" placeholder="New PIN" style="flex: 1;">
+            </div>
+            <button onclick="changePin()" class="danger">Authorize & Update PIN</button>
+        </div>
+
+        <div class="card full-width">
+            <h3 style="border-left-color: var(--accent-blue);">Restore Encrypted Backup</h3>
+            <div style="display: flex; gap: 12px;">
+                <input type="text" id="backupPayload" placeholder="Paste Backup String (e.g. AWS:a1b2c3d4...)"
+                    style="flex: 3;">
+                <button onclick="restoreBackup()" class="primary" style="flex: 1;">Restore Slot</button>
+            </div>
+        </div>
+
+        <div class="card full-width">
+            <h3 style="border-left-color: var(--text-muted);">System Utilities</h3>
+            <div class="btn-group">
+                <button onclick="sendCommand('LIST_SLOTS\n')">📋 Dump Slot Table</button>
+                <button onclick="syncTime()">⏱️ Sync RTC Time</button>
+                <button onclick="sendCommand('SELF_TEST\n')">🔍 Run Diagnostics</button>
+                <button onclick="sendCommand('EXPORT_BACKUP\n')">💾 Export Backup</button>
+            </div>
+        </div>
+
+        <div class="card full-width" style="padding: 0; border: 1px solid var(--border-color);">
+            <div class="terminal-header">
+                <div class="dot r"></div>
+                <div class="dot y"></div>
+                <div class="dot g"></div>
+                <span style="margin-left: 10px; font-size: 0.75rem; color: #555;">hsm-serial-log ~ /dev/ttyUSB0</span>
+            </div>
+            <div class="terminal" id="output"></div>
+        </div>
+    </div>
+
+    <script>
+        let port, reader, writer, incomingBuffer = "";
+
+        async function checkExistingPorts() {
+            if ("serial" in navigator) {
+                const ports = await navigator.serial.getPorts();
+                if (ports.length > 0) {
+                    let badge = document.getElementById('statusBadge');
+                    badge.innerText = "PORT MEMORIZED - CLICK CONNECT";
+                    badge.style.color = "#ffbd2e";
+                    badge.style.borderColor = "#ffbd2e";
+                }
+            }
+        }
+
+        async function connectPort() {
+            try {
+                if (!confirm("SECURITY WARNING: Authorize connection to local hardware serial port?")) return;
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 115200 });
+                document.getElementById('connectBtn').style.display = "none";
+                document.getElementById('disconnectBtn').style.display = "flex";
+                let badge = document.getElementById('statusBadge');
+                badge.innerText = "LINKED & ACTIVE"; badge.classList.add("active");
+                readLoop();
+            } catch (err) { alert("Connection error: " + err); }
+        }
+
+        async function disconnectPort() {
+            try {
+                if (reader) await reader.cancel();
+                if (port) { await port.close(); port = null; }
+                document.getElementById('connectBtn').style.display = "flex";
+                document.getElementById('disconnectBtn').style.display = "none";
+                let badge = document.getElementById('statusBadge');
+                badge.innerText = "DISCONNECTED"; badge.classList.remove("active"); badge.style = "";
+            } catch (err) { alert("Disconnect error: " + err); }
+        }
+
+        async function sendCommand(cmd) {
+            if (!port || !port.readable) { alert("Error: Hardware port not linked!"); return; }
+            const writer = port.writable.getWriter();
+            await writer.write(new TextEncoder().encode(cmd));
+            writer.releaseLock();
+        }
+
+        function addSlot() {
+            let n = document.getElementById('slotName').value;
+            let s = document.getElementById('slotSecret').value.replace(/\s+/g, '');
+            if (!n || !s) return alert("Missing Account Identifier or Secret");
+            sendCommand(`ADD_SLOT:${n}:${s}\n`);
+        }
+
+        function removeSlot() {
+            let idx = document.getElementById('removeSlotNum').value;
+            if (confirm(`WARNING: Permanently delete Slot ${idx} from hardware memory?`)) sendCommand(`REMOVE_SLOT:${idx}\n`);
+        }
+
+        function changePin() {
+            let oldPin = document.getElementById('oldPin').value;
+            let newPin = document.getElementById('newPin').value;
+            if (oldPin.length < 1) return alert("Current PIN is required.");
+            if (newPin.length < 4) return alert("New PIN must be at least 4 digits.");
+            sendCommand(`SET_PIN:${oldPin}:${newPin}\n`);
+            document.getElementById('oldPin').value = ""; document.getElementById('newPin').value = "";
+        }
+
+        function restoreBackup() {
+            let payload = document.getElementById('backupPayload').value.trim();
+            if (!payload.includes(':')) return alert("Invalid backup format. Must be Name:EncryptedHex");
+            sendCommand(`RESTORE_BACKUP:${payload}\n`);
+            document.getElementById('backupPayload').value = "";
+        }
+
+        function syncTime() {
+            let epoch = Math.floor(Date.now() / 1000);
+            sendCommand(`SYNC_TIME:${epoch}\n`);
+        }
+
+        async function readLoop() {
+            const decoder = new TextDecoder();
+            while (port && port.readable) {
+                reader = port.readable.getReader();
+                try {
+                    while (true) {
+                        const { value, done } = await reader.read();
+                        if (done) break;
+                        incomingBuffer += decoder.decode(value, { stream: true });
+                        let lines = incomingBuffer.split('\n');
+                        incomingBuffer = lines.pop();
+                        for (let line of lines) {
+                            let pre = document.getElementById('output');
+                            pre.innerText += "> " + line + "\n";
+                            pre.scrollTop = pre.scrollHeight;
+                        }
+                    }
+                } catch (error) { console.error(error); } finally { reader.releaseLock(); }
+            }
+        }
+    </script>
+</body>
+
+</html>
