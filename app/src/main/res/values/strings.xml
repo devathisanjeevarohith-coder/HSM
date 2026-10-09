@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SecureVault Locker</string>
+    <string name="accessibility_service_label">SecureVault App Interceptor</string>
+    <string name="accessibility_service_description">Monitors foreground window transitions offline to enforce hardware TOTP protection over sensitive applications.</string>
+    <string name="secure_vault_title">SECUREVAULT LOCKER</string>
+    <string name="hardware_token_required">HARDWARE HSM REQUIRED</string>
+    <string name="locked_application_label">TARGET APPLICATION PROTECTED</string>
+    <string name="enter_esp32_totp_hint">Connect the SecureVault HSM by USB, read the 6-digit code on its OLED, then enter it below.</string>
+    <string name="hardware_connecting">CONNECTING TO SECUREVAULT HSM…</string>
+    <string name="hardware_ready">HARDWARE CONNECTED • TOTP READY</string>
+    <string name="hardware_disconnected">HARDWARE DISCONNECTED</string>
+    <string name="verifying_with_hardware">VERIFYING WITH HARDWARE…</string>
+    <string name="error_hardware_not_ready">Connect the SecureVault hardware module by USB.</string>
+    <string name="unlock_session">VERIFY &amp; UNLOCK</string>
+    <string name="lock_icon_description">SecureVault Protected App Lock</string>
+    <string name="error_invalid_totp">Invalid TOTP code. Enter the code currently shown on the SecureVault OLED.</string>
+    <string name="error_code_too_short">Please enter the full 6-digit TOTP code.</string>
+    <string name="session_granted">Session unlocked. Hardware authorization active.</string>
+    <string name="settings_protected_summary">Protected application and hardware-slot state</string>
+</resources>

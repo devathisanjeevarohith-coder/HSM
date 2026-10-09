@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0A0D14"
+    android:padding="24dp"
+    tools:context=".ui.LockOverlayActivity">
+
+    <!-- Top Security Header / Lock Badge -->
+    <LinearLayout
+        android:id="@+id/headerContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Shield / Lock Icon Frame -->
+        <FrameLayout
+            android:layout_width="88dp"
+            android:layout_height="88dp"
+            android:background="@drawable/bg_shield_glow">
+
+            <ImageView
+                android:id="@+id/ivLockIcon"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/lock_icon_description"
+                android:src="@drawable/ic_lock_closed"
+                app:tint="#00E5FF" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvAppTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="sans-serif-black"
+            android:letterSpacing="0.08"
+            android:text="@string/secure_vault_title"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tvSecurityMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:letterSpacing="0.05"
+            android:text="@string/hardware_token_required"
+            android:textColor="#00E5FF"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Center Card: Locked Package Details & TOTP Input -->
+    <LinearLayout
+        android:id="@+id/cardContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/bg_card_dark"
+        android:elevation="8dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerContainer">
+
+        <!-- Target App Info -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/locked_application_label"
+            android:textAllCaps="true"
+            android:textColor="#8F9CAE"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- Locked Package Name TextView -->
+        <TextView
+            android:id="@+id/tvPackageName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:textColor="#E2E8F0"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            tools:text="com.whatsapp" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="#1E293B" />
+
+        <!-- Instruction Text -->
+        <TextView
+            android:id="@+id/tvInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/enter_esp32_totp_hint"
+            android:textColor="#94A3B8"
+            android:textSize="13sp" />
+
+        <!-- Physical hardware connection state -->
+        <TextView
+            android:id="@+id/tvHardwareStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:gravity="center"
+            android:text="CONNECTING TO SECUREVAULT HSM…"
+            android:textColor="#00E5FF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <!-- 6-Digit TOTP Input Field -->
+        <EditText
+            android:id="@+id/etTotpCode"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/bg_totp_input"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:hint="••••••"
+            android:importantForAutofill="no"
+            android:inputType="numberPassword"
+            android:letterSpacing="0.4"
+            android:maxLength="6"
+            android:textColor="#00E5FF"
+            android:textColorHint="#475569"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <!-- Status / Error Feedback Message -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#F43F5E"
+            android:textSize="12sp"
+            android:visibility="gone"
+            tools:text="Invalid TOTP code. Check ESP32 token."
+            tools:visibility="visible" />
+
+        <!-- Submit / Unlock Button -->
+        <Button
+            android:id="@+id/btnUnlock"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_primary_cyber"
+            android:elevation="4dp"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.08"
+            android:text="@string/unlock_session"
+            android:textAllCaps="true"
+            android:textColor="#0A0D14"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

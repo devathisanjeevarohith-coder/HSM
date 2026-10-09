@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      Offline Security Declaration:
+      No INTERNET permission is requested. SecureVault communicates only with
+      the physically attached HSM over USB Host / OTG.
+    -->
+
+    <!-- Physical SecureVault module is accessed through Android USB Host / OTG. -->
+    <uses-feature android:name="android.hardware.usb.host" android:required="true" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+    </queries>
+
+
+    <!-- Required to display the lock overlay above third-party applications -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- Required for persistent background monitoring without OS kill -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SecureVault">
+
+        <!-- 
+          Accessibility Service:
+          Monitors window state transitions (TYPE_WINDOW_STATE_CHANGED) to detect
+          when a protected target package moves to the foreground.
+        -->
+        <service
+            android:name=".locker.service.AppMonitorService"
+            android:exported="true"
+            android:label="@string/accessibility_service_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- 
+          Lock Overlay Activity:
+          Full-screen, NoActionBar activity displayed on top of locked apps.
+          - excludeFromRecents: Does not appear in recent apps list to prevent bypassing.
+          - launchMode="singleTask": Ensures only a single instance of the overlay exists.
+          - noHistory="true": Ensures user cannot navigate back into the overlay once dismissed.
+        -->
+        <activity
+            android:name=".locker.ui.LockOverlayActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SecureVault.NoActionBar.Fullscreen"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <activity
+            android:name=".locker.ui.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SecureVault" />
+
+        <activity
+            android:name=".locker.ui.ApplicationVaultActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SecureVault" />
+
+        <!-- Main Settings / Setup Activity (Optional for user setup) -->
+        <activity
+            android:name=".locker.ui.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>

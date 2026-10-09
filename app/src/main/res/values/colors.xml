@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_cyber">#1677E8</color>
+    <color name="background_dark">#F6F8FC</color>
+    <color name="sv_cyan">#1677E8</color>
+    <color name="sv_error">#D92D4A</color>
+    <color name="sv_success">#19A974</color>
+    <color name="sv_warning">#C98A00</color>
+    <color name="sv_text_primary">#15233B</color>
+    <color name="sv_text_muted">#6E7E95</color>
+    <color name="sv_panel">#FFFFFF</color>
+    <color name="sv_panel_2">#F1F5FA</color>
+    <color name="sv_line">#DCE5F0</color>
+    <color name="sv_blue_soft">#EAF3FF</color>
+    <color name="sv_green_soft">#E9F8F2</color>
+</resources>

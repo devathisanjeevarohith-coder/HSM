@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp">
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Back"
+            android:padding="12dp"
+            android:src="@android:drawable/ic_media_previous" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="2dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@color/sv_text_primary"
+                android:textSize="21sp"
+                android:fontFamily="sans-serif-medium" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SecureVault control center"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="28dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="HARDWARE"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08" />
+
+            <LinearLayout
+                android:id="@+id/rowHsmStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="vertical"
+                android:padding="15dp"
+                android:background="@drawable/bg_card_light"
+                android:clickable="true"
+                android:focusable="true">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="ESP32 HSM"
+                        android:textColor="@color/sv_text_primary"
+                        android:textSize="15sp"
+                        android:fontFamily="sans-serif-medium" />
+                    <TextView
+                        android:id="@+id/tvHsmStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Not connected"
+                        android:textColor="@color/sv_text_muted"
+                        android:textSize="12sp"
+                        android:fontFamily="sans-serif-medium" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/tvHsmDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Hardware status"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvSlotCapacity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="0 / 8 assigned"
+                    android:textColor="@color/sv_cyan"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/rowConnectionTest"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Run connection test\nVerify USB, handshake and time synchronization" />
+            <TextView
+                android:id="@+id/rowReconnect"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Reconnect ESP32\nClear a stale connection attempt and retry" />
+            <TextView
+                android:id="@+id/rowDisconnect"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Disconnect ESP32\nEnd the active hardware session" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="SECURITY"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/rowMonitoring"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="App monitoring" />
+            <TextView
+                android:id="@+id/rowOverlay"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Lock overlay" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="12dp"
+                android:background="@drawable/bg_card_light">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="App monitoring"
+                    android:textColor="@color/sv_text_primary"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvMonitoringStatusVisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Not enabled"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:padding="12dp"
+                android:background="@drawable/bg_card_light">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Lock overlay"
+                    android:textColor="@color/sv_text_primary"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/tvOverlayStatusVisible"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Not enabled"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="12sp"
+                    android:fontFamily="sans-serif-medium" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/rowVault"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Application Vault\nReview protected apps and persistent hardware-slot assignments" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="@string/settings_protected_summary"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp" />
+            <TextView
+                android:id="@+id/tvProtectedSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="0 protected • 0 hardware assignments"
+                android:textColor="@color/sv_text_primary"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="DIAGNOSTICS"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08" />
+
+            <TextView
+                android:id="@+id/rowSystemCheck"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="System check\nReview the current security and HSM readiness" />
+            <TextView
+                android:id="@+id/rowViewLog"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="View diagnostic log\nInspect recent USB and handshake events" />
+            <TextView
+                android:id="@+id/rowExportLog"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Export diagnostic log\nShare the local troubleshooting history" />
+            <TextView
+                android:id="@+id/rowClearLog"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Clear diagnostic log\nRemove stored troubleshooting history" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:padding="12dp"
+                android:orientation="vertical"
+                android:background="@drawable/bg_card_light">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last HSM response"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/tvLastEvent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="No HSM response yet"
+                    android:textColor="@color/sv_text_primary"
+                    android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Last error"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="11sp" />
+                <TextView
+                    android:id="@+id/tvLastError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="None"
+                    android:textColor="@color/sv_text_muted"
+                    android:textSize="11sp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="RECOVERY"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08" />
+            <TextView
+                android:id="@+id/rowRefreshConfig"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Refresh application configuration\nReload protected-app state without changing slot assignments" />
+            <TextView
+                android:id="@+id/rowRevokeSessions"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="Revoke active unlock sessions\nImmediately require hardware authentication again" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="ABOUT"
+                android:textColor="@color/sv_text_muted"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.08" />
+            <TextView
+                android:id="@+id/rowAbout"
+                style="@style/SecureVaultSettingsRow"
+                android:layout_marginTop="8dp"
+                android:text="About SecureVault\nArchitecture and hardware-protection information" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
